@@ -10,7 +10,7 @@ Module Module1
     Dim tmp As New List(Of HousingEstate)
     Sub Main()
 
-       
+
 
 
         Dim realEstates = Parse("http://www.cds.spb.ru/novostroiki-peterburga/")
