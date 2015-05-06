@@ -7,10 +7,10 @@ Imports HtmlAgilityPack
 
 Module Module1
     Const base As String = "http://www.cds.spb.ru"
-    Dim tmp As New List(Of HousingEstate)
     Sub Main()
+        ' Результирующий словарь
+        Dim map As New Dictionary(Of String, String)
 
-       
 
 
         Dim realEstates = Parse("http://www.cds.spb.ru/novostroiki-peterburga/")
@@ -21,13 +21,10 @@ Module Module1
             realEstates.AddRange(Parse(cantale.Uri))
         End If
 
-        ' Результирующий словарь
-        Dim map As New Dictionary(Of String, String)
 
-        Dim flag As Boolean
+
         ' Проходим по списку на странице новостройки и заполняем корпуса
         For Each estate As RealEstate In realEstates
-            flag = True
             estate.HousingEstates = New List(Of HousingEstate)()
             Dim site = GetHtml(estate.Uri)
 
@@ -43,41 +40,16 @@ Module Module1
                             Continue For
                         End If
                         map.Add(String.Format("{0} {1} {2}", estate.Title, estate.ShortAddress, htmlNode.SelectSingleNode("div/span").InnerText.Trim()), urlsite)
-
-                        'estate.HousingEstates.Add(
-                        '    New HousingEstate() With {
-                        '        .NameHousing = htmlNode.SelectSingleNode("div/span").InnerText.Trim(),
-                        '        .Uri = urlsite
-                        '    })
                     Catch ex As Exception
                         Continue For
                     End Try
-                    If (flag = True) Then
-                        map.Add(String.Format("{0} {1}", estate.Title, estate.ShortAddress), estate.Uri)
-                        flag = False
-                    End If
 
                 Next
+            Else
+                map.Add(String.Format("{0} {1}", estate.Title, estate.ShortAddress), estate.Uri)
             End If
         Next
 
-
-        'For Each item As RealEstate In realEstates
-        '    If item.HousingEstates.Count <> 0 Then
-        '        For Each housingEstate As HousingEstate In item.HousingEstates
-
-        '            tmp.Add(New HousingEstate() With {
-        '                 .NameHousing = item.Title & " " & item.ShortAddress & " " & housingEstate.NameHousing,
-        '                 .Uri = housingEstate.Uri
-        '            })
-        '        Next
-        '    Else
-        '        tmp.Add(New HousingEstate() With {
-        '             .NameHousing = item.Title & " " & item.ShortAddress,
-        '             .Uri = item.Uri
-        '        })
-        '    End If
-        'Next
 
 
     End Sub
